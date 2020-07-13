@@ -8,10 +8,9 @@ Provisions the VM with an Ansible playbook that installs neo4j, python-neo4j, an
 
 Running `vagrant up` will download and install:
 
-* Ubuntu 18.04 LTS (Base Box) `bionic64 http://files.vagrantup.com/bionic64.box`
-
-* [OpenJDk8]
-* [Neo4j]Community Edition
+* [Ubuntu](http://ubuntu.com) 18.04 LTS (Base Box) `bionic64 http://files.vagrantup.com/bionic64.box`
+* [OpenJdk8](https://openjdk.java.net/)
+* [Neo4j](https://neo4j.com/) Community Edition
 
 ## Requirements
 
