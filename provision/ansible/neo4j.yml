@@ -1,0 +1,25 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: 'update-alternative python'
+      #raw: sudo apt-get -y install python3
+      raw: update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1
+      ignore_errors: true
+  roles:
+    - neo4j
+  vars:
+    ruby_version: 2.6.3
+
+  tasks:
+  - name: Refresh apt cache
+    apt:
+      update_cache: yes
+
+  - name: Update all packages
+    apt:
+      upgrade: dist
+
+  handlers:
+  - name: restart neo4j
+    service: name=neo4j state=restarted

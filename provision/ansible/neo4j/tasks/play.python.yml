@@ -1,0 +1,16 @@
+---
+- name: install pip packages
+  pip:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - awscli
+    - aws-sam-cli
+    - aws-shell
+    - boto3
+    - json2html
+    - jsonnet
+    - neo4j
+    - paramiko
+    - PyGithub
+    - pytest

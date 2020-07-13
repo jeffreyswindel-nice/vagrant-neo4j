@@ -1,0 +1,52 @@
+---
+- name: check for nodejs directory
+  stat: 
+    path: /usr/local/lib/nodejs
+  register: nodejs_directory
+- name: remove preinstalled nodejs package
+  apt:
+    name: nodejs
+    state: absent
+- name: download nodejs archive
+  get_url:
+    url: "https://nodejs.org/dist/v12.11.0/node-v12.11.0-linux-x64.tar.xz"
+    dest: /tmp/nodejs.zip
+    checksum: sha256:c0dc88110ac3ee095e3d09077545435b72d4cd52e35c43cd3fa666cff7446d46.
+- name: make nodejs directory
+  file:
+    path: /usr/local/lib/nodejs
+    state: directory
+    mode: "u=rwx,g=rx,o=rx"
+    recurse: yes
+  when: not nodejs_directory.stat.exists
+- name: unpack nodejs archive
+  unarchive:
+    src: /tmp/nodejs.zip
+    dest: /usr/local/lib/nodejs
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+  when: not nodejs_directory.stat.exists
+- name: create symbolic links
+  file:
+    src: /usr/local/lib/nodejs/bin/{{ item }}
+    dest: /usr/bin/{{ item }}
+    owner: root
+    group: root
+    state: link
+  with_items:
+    - node
+    - npm
+    - npx
+- name: add nodejs path
+  copy:
+    dest: /etc/profile.d/nodejs-path.sh
+    content: 'PATH=$PATH:{{ item }}'
+  with_items:
+    - /usr/local/lib/nodejs/bin/
+- name: make npm-global directory
+  file:
+    path: /usr/local/lib/nodejs/.npm-global
+    owner: vagrant
+    state: directory
+    mode: "u=rwx,g=rwx,o=rx"
+    recurse: yes
